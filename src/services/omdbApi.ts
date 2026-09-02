@@ -21,3 +21,18 @@ export async function searchMovies(
 
   return data
 }
+
+export async function getMovieDetails(id: string) {
+  const url = `${BASE_URL}?apikey=${API_KEY}&i=${encodeURIComponent(id)}&plot=full`
+
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movie details")
+  }
+
+  const data = await response.json()
+
+  return data
+}
+
