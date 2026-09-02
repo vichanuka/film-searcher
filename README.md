@@ -1,16 +1,95 @@
-# React + Vite
+# Film Searcher
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek, responsive web application built with React, Vite, and Tailwind CSS v4 that allows users to search, filter, and explore detailed information about movies, TV series, and episodes using the OMDb API.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Search & Filtering: Search titles in real-time with filters for media type (Movie, Series, Episode) and release year.
+- Pagination: Effortlessly browse through multi-page search results.
+- Detailed Movie View: Access full plots, cast lists, ratings, runtime, genre tags, and high-resolution posters.
+- Dark Mode: Built-in dark/light theme switcher powered by Tailwind CSS v4 custom variants.
+- Skeleton Loading States: Skeleton components ensure a smooth, modern visual experience while data is being fetched.
+- Fully Responsive: Optimized for desktop, tablet, and mobile screens.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Frontend: React 19, React Router v7
+- Styling: Tailwind CSS v4 (`@tailwindcss/vite`)
+- Build Tool: Vite 8
+- Data Source: [OMDb API](https://www.omdbapi.com/)
+- Language: JavaScript / TypeScript
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you have Node.js (v18 or higher) installed on your system.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/film-searcher.git
+cd film-searcher
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in the root directory (or update the existing one):
+
+```env
+VITE_OMDB_API_KEY=your_omdb_api_key_here
+```
+
+> Note: You can get a free API key from [OMDb API Key Request](https://www.omdbapi.com/apikey.aspx).
+
+---
+
+## Available Scripts
+
+In the project directory, you can run:
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Runs the app in development mode at `http://localhost:5173` |
+| `npm run build` | Builds the app for production to the `dist` folder |
+| `npm run preview` | Locally previews the production build |
+| `npm run lint` | Runs ESLint to check for code issues |
+
+---
+
+## Project Structure
+
+```text
+film-searcher/
+├── public/
+├── src/
+│   ├── components/       # Reusable components (MovieCard, SearchBar, Skeleton, ThemeToggle, etc.)
+│   ├── data/             # Mock data / fallback data
+│   ├── pages/            # Page components (Home, MovieDetails)
+│   ├── services/         # API service functions (omdbApi.ts)
+│   ├── types/            # TypeScript interfaces & types
+│   ├── App.jsx           # Routing & Main Layout
+│   ├── index.css         # Global styles & Tailwind CSS v4 setup
+│   └── main.jsx          # App entry point
+├── .env                  # Environment variables
+├── package.json
+└── vite.config.js
+```
+
+---
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
