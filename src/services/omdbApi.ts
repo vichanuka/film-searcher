@@ -5,11 +5,20 @@ const BASE_URL = "https://www.omdbapi.com/"
 
 export async function searchMovies(
   query: string,
-  page: number = 1
+  page: number = 1,
+  type: string = "",
+  year: string = ""
 ): Promise<MovieSearchResponse> {
-  const url = `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(
+  let url = `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(
     query
   )}&page=${page}`
+
+  if (type) {
+    url += `&type=${encodeURIComponent(type)}`
+  }
+  if (year) {
+    url += `&y=${encodeURIComponent(year)}`
+  }
 
   const response = await fetch(url)
 
