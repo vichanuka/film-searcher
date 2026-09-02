@@ -8,10 +8,10 @@ export default function MovieCard({ movie }) {
   return (
     <Link
       to={`/movie/${movie.imdbID}`}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-emerald-500/50 dark:hover:shadow-emerald-500/5"
     >
       {/* Poster Container */}
-      <div className="relative h-80 w-full overflow-hidden bg-gray-900">
+      <div className="relative h-80 w-full overflow-hidden bg-gray-900 dark:bg-slate-950">
         {hasPoster ? (
           <img
             src={movie.Poster}
@@ -53,27 +53,27 @@ export default function MovieCard({ movie }) {
       <div className="flex flex-1 flex-col justify-between p-4">
         <div>
           <h2
-            className="line-clamp-2 text-base font-bold text-gray-900 transition-colors group-hover:text-emerald-700"
+            className="line-clamp-2 text-base font-bold text-gray-900 transition-colors group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-400"
             title={movie.Title}
           >
             {movie.Title}
           </h2>
 
-          <p className="mt-1 text-sm font-medium text-gray-500">
+          <p className="mt-1 text-sm font-medium text-gray-500 dark:text-gray-400">
             {movie.Year}
           </p>
         </div>
 
         {/* Action Link / Info */}
-        <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <div className="mt-4 pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between">
+          <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
             {movie.imdbID}
           </span>
           <a
             href={`https://www.imdb.com/title/${movie.imdbID}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-semibold text-emerald-600 hover:text-emerald-800 hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-emerald-600 hover:text-emerald-800 hover:underline flex items-center gap-1 dark:text-emerald-400 dark:hover:text-emerald-300"
             onClick={(e) => e.stopPropagation()}
           >
             IMDb

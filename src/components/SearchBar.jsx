@@ -17,10 +17,10 @@ export default function SearchBar({
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-white p-3 shadow-md shadow-emerald-500/5 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-2xl border border-emerald-100 bg-white p-3 shadow-md shadow-emerald-500/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none sm:flex-row sm:items-center">
         {/* Search Input with Icon */}
         <div className="relative flex-1">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-black">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-700 dark:text-gray-300">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -40,7 +40,7 @@ export default function SearchBar({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="Search movies, series, episodes..."
-            className="w-full rounded-xl bg-emerald-50/50 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 placeholder-gray-400 transition-colors focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+            className="w-full rounded-xl bg-emerald-50/50 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 placeholder-gray-400 transition-colors focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-white dark:placeholder-gray-500 dark:focus:bg-slate-800 dark:focus:ring-emerald-400/30"
           />
         </div>
 
@@ -50,7 +50,7 @@ export default function SearchBar({
           <select
             value={type}
             onChange={(e) => onTypeChange(e.target.value)}
-            className="flex-1 rounded-xl bg-emerald-50/50 px-3 py-3 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 sm:w-32"
+            className="flex-1 rounded-xl bg-emerald-50/50 px-3 py-3 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:focus:bg-slate-800 sm:w-32"
           >
             <option value="">All Types</option>
             <option value="movie">Movie</option>
@@ -66,7 +66,7 @@ export default function SearchBar({
             placeholder="Year"
             min="1900"
             max={new Date().getFullYear()}
-            className="w-24 rounded-xl bg-emerald-50/50 px-3 py-3 text-xs font-semibold text-emerald-900 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+            className="w-24 rounded-xl bg-emerald-50/50 px-3 py-3 text-xs font-semibold text-emerald-900 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:placeholder-gray-500 dark:focus:bg-slate-800"
           />
 
           {/* Reset Filters Button */}
@@ -75,7 +75,7 @@ export default function SearchBar({
               type="button"
               onClick={onReset}
               title="Reset filters"
-              className="rounded-xl bg-emerald-100/70 px-3 py-3 text-xs font-semibold text-emerald-700 hover:bg-emerald-200/80 transition-colors"
+              className="rounded-xl bg-emerald-100/70 px-3 py-3 text-xs font-semibold text-emerald-700 hover:bg-emerald-200/80 transition-colors dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-slate-700"
             >
               Reset
             </button>
@@ -84,7 +84,7 @@ export default function SearchBar({
           {/* Submit Button */}
           <button
             type="submit"
-            className="flex-1 sm:flex-none rounded-xl bg-emerald-600 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-emerald-600/20 transition-all hover:bg-emerald-700 active:scale-95"
+            className="flex-1 sm:flex-none rounded-xl bg-emerald-600 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-emerald-600/20 transition-all hover:bg-emerald-700 active:scale-95 dark:bg-emerald-600 dark:hover:bg-emerald-500"
           >
             Search
           </button>
