@@ -167,7 +167,6 @@ export default function Home() {
         results = results.filter((movie) => {
           const yNum = parseInt(movie.Year?.match(/\d{4}/)?.[0] || "0", 10)
           if (!yNum) return true
-          if (selectedYear === "2020s") return yNum >= 2020 && yNum <= 2029
           if (selectedYear === "2010s") return yNum >= 2010 && yNum <= 2019
           if (selectedYear === "2000s") return yNum >= 2000 && yNum <= 2009
           if (selectedYear === "1990s") return yNum >= 1990 && yNum <= 1999

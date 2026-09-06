@@ -76,7 +76,6 @@ export default function SearchBar({
               className="rounded-xl bg-emerald-50/50 px-3 py-2.5 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:focus:bg-slate-800 cursor-pointer"
             >
               <option value="">Any year</option>
-              <option value="2020s">2020s</option>
               <option value="2010s">2010s</option>
               <option value="2000s">2000s</option>
               <option value="1990s">1990s</option>
