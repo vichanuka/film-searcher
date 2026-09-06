@@ -1,9 +1,19 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { useWatchlist } from "../context/WatchlistContext"
 
 export default function MovieCard({ movie }) {
   const [imgError, setImgError] = useState(false)
+  const { isWatchlisted, toggleWatchlist } = useWatchlist()
+  const saved = isWatchlisted(movie.imdbID)
+
   const hasPoster = movie.Poster && movie.Poster !== "N/A" && !imgError
+
+  const handleHeartClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    toggleWatchlist(movie)
+  }
 
   return (
     <Link
@@ -40,6 +50,32 @@ export default function MovieCard({ movie }) {
             </span>
           </div>
         )}
+
+        {/* Watchlist Heart Button Overlay */}
+        <button
+          type="button"
+          onClick={handleHeartClick}
+          title={saved ? "Remove from Watchlist" : "Add to Watchlist"}
+          className={`absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md transition-all ${
+            saved
+              ? "bg-rose-500 text-white shadow-md shadow-rose-500/30 scale-105"
+              : "bg-slate-950/60 text-white/80 hover:bg-rose-500 hover:text-white border border-white/20"
+          }`}
+        >
+          <svg
+            className={`h-4 w-4 transition-transform ${saved ? "fill-current scale-110" : ""}`}
+            fill={saved ? "currentColor" : "none"}
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
+          </svg>
+        </button>
 
         {/* Media Type Badge */}
         {movie.Type && (

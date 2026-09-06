@@ -3,12 +3,15 @@ import { useParams, Link } from "react-router-dom"
 import { getMovieDetails } from "../services/omdbApi"
 import MovieDetailsSkeleton from "../components/MovieDetailsSkeleton"
 import Navbar from "../components/Navbar"
+import { useWatchlist } from "../context/WatchlistContext"
 
 export default function MovieDetails() {
   const { id } = useParams()
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const { isWatchlisted, toggleWatchlist } = useWatchlist()
+  const isSaved = movie ? isWatchlisted(movie.imdbID) : false
 
   useEffect(() => {
     async function fetchDetails() {
@@ -136,6 +139,32 @@ export default function MovieDetails() {
                 </div>
               )}
 
+              {/* Watchlist Heart Overlay Button */}
+              <button
+                type="button"
+                onClick={() => toggleWatchlist(movie)}
+                title={isSaved ? "Remove from Watchlist" : "Add to Watchlist"}
+                className={`absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-all ${
+                  isSaved
+                    ? "bg-rose-500 text-white shadow-lg shadow-rose-500/30 scale-105"
+                    : "bg-slate-950/70 text-white hover:bg-rose-500 border border-white/20"
+                }`}
+              >
+                <svg
+                  className={`h-5 w-5 ${isSaved ? "fill-current scale-110" : ""}`}
+                  fill={isSaved ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </button>
+
               {/* Type Overlay Badge */}
               {movie.Type && (
                 <div className="absolute right-4 top-4 rounded-full bg-emerald-950/80 px-3 py-1 text-xs font-semibold capitalize text-emerald-300 shadow-md backdrop-blur-md border border-emerald-500/30">
@@ -147,23 +176,51 @@ export default function MovieDetails() {
             {/* Details Content */}
             <div className="flex flex-1 flex-col justify-between p-6 sm:p-10">
               <div>
-                {/* Meta Badges */}
-                <div className="flex flex-wrap items-center gap-3">
-                  {movie.Rated && movie.Rated !== "N/A" && (
-                    <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
-                      {movie.Rated}
-                    </span>
-                  )}
-                  {movie.Runtime && movie.Runtime !== "N/A" && (
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                      {movie.Runtime}
-                    </span>
-                  )}
-                  {movie.Released && movie.Released !== "N/A" && (
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                      • {movie.Released}
-                    </span>
-                  )}
+                {/* Meta Badges & Watchlist Action */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    {movie.Rated && movie.Rated !== "N/A" && (
+                      <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
+                        {movie.Rated}
+                      </span>
+                    )}
+                    {movie.Runtime && movie.Runtime !== "N/A" && (
+                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        {movie.Runtime}
+                      </span>
+                    )}
+                    {movie.Released && movie.Released !== "N/A" && (
+                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        • {movie.Released}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Add to Watchlist Button */}
+                  <button
+                    type="button"
+                    onClick={() => toggleWatchlist(movie)}
+                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                      isSaved
+                        ? "bg-rose-500 text-white shadow-md shadow-rose-500/20 hover:bg-rose-600"
+                        : "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"
+                    }`}
+                  >
+                    <svg
+                      className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`}
+                      fill={isSaved ? "currentColor" : "none"}
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                    {isSaved ? "In Watchlist" : "Add to Watchlist"}
+                  </button>
                 </div>
 
                 {/* Title & Year */}
