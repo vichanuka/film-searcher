@@ -5,7 +5,7 @@ import MovieCard from "../components/MovieCard"
 import MovieCardSkeleton from "../components/MovieCardSkeleton"
 import Pagination from "../components/Pagination"
 import { searchMovies, getMovieDetails } from "../services/omdbApi"
-import { popularMovieIds } from "../data/popularMovies"
+import { getPopularIdsBatch, fallbackKeywords } from "../data/popularMovies"
 
 export default function Home() {
   const [query, setQuery] = useState("")
@@ -21,15 +21,39 @@ export default function Home() {
   // Popular movies state
   const [popularMovies, setPopularMovies] = useState([])
   const [popularLoading, setPopularLoading] = useState(true)
+  const [popularBatchPage, setPopularBatchPage] = useState(1)
+  const [loadingMorePopular, setLoadingMorePopular] = useState(false)
+
+  async function loadPopularBatch(pageNumber = 1) {
+    const idsToFetch = getPopularIdsBatch(pageNumber, 10)
+    let fetchedMovies = []
+
+    if (idsToFetch.length > 0) {
+      const results = await Promise.all(
+        idsToFetch.map((id) => getMovieDetails(id).catch(() => null))
+      )
+      fetchedMovies = results.filter((m) => m && m.Response !== "False")
+    } else {
+      const keywordIndex = (pageNumber - 6) % fallbackKeywords.length
+      const keyword = fallbackKeywords[Math.abs(keywordIndex)] || "movie"
+      try {
+        const searchRes = await searchMovies(keyword, 1)
+        fetchedMovies = searchRes.Search || []
+      } catch {
+        fetchedMovies = []
+      }
+    }
+
+    return fetchedMovies
+  }
 
   useEffect(() => {
-    async function loadPopularMovies() {
+    async function initPopularMovies() {
       try {
         setPopularLoading(true)
-        const results = await Promise.all(
-          popularMovieIds.map((id) => getMovieDetails(id).catch(() => null))
-        )
-        setPopularMovies(results.filter((m) => m && m.Response !== "False"))
+        const initialBatch = await loadPopularBatch(1)
+        setPopularMovies(initialBatch)
+        setPopularBatchPage(1)
       } catch {
         setPopularMovies([])
       } finally {
@@ -37,8 +61,33 @@ export default function Home() {
       }
     }
 
-    loadPopularMovies()
+    initPopularMovies()
   }, [])
+
+  async function handleLoadMorePopular() {
+    if (loadingMorePopular) return
+    try {
+      setLoadingMorePopular(true)
+      const nextPage = popularBatchPage + 1
+      const newItems = await loadPopularBatch(nextPage)
+
+      setPopularMovies((prev) => {
+        const existingIds = new Set(prev.map((m) => m.imdbID))
+        const filteredNew = newItems.filter((m) => !existingIds.has(m.imdbID))
+        return [...prev, ...filteredNew]
+      })
+      setPopularBatchPage(nextPage)
+    } catch {
+      // ignore
+    } finally {
+      setLoadingMorePopular(false)
+    }
+  }
+
+  function handleCollapsePopular() {
+    setPopularMovies((prev) => prev.slice(0, 10))
+    setPopularBatchPage(1)
+  }
 
   async function fetchMovies(
     searchQuery,
@@ -276,11 +325,43 @@ export default function Home() {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                  {popularMovies.map((movie) => (
-                    <MovieCard key={movie.imdbID} movie={movie} />
-                  ))}
-                </div>
+                <>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    {popularMovies.map((movie) => (
+                      <MovieCard key={movie.imdbID} movie={movie} />
+                    ))}
+                    {loadingMorePopular &&
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <MovieCardSkeleton key={`skeleton-more-${i}`} />
+                      ))}
+                  </div>
+
+                  {/* Load More Button Container */}
+                  <div className="mt-10 flex items-center justify-center">
+                    <button
+                      onClick={handleLoadMorePopular}
+                      disabled={loadingMorePopular}
+                      className="group flex items-center gap-2 rounded-2xl bg-emerald-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/25 hover:bg-emerald-700 active:scale-95 transition-all disabled:opacity-60 cursor-pointer"
+                    >
+                      {loadingMorePopular ? (
+                        <>
+                          <svg className="h-4 w-4 animate-spin text-white" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          <span>Fetching More Movies...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Load More Popular Movies</span>
+                          <svg className="h-4 w-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </>
               )}
             </section>
           )}

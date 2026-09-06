@@ -37,7 +37,6 @@ export const popularMovieIds = [
 
   // Page 4 (Modern Legends & Thrillers)
   "tt6751668",  // Parasite (2019)
-  "tt0816692",  // Interstellar
   "tt10872600", // Spider-Man: No Way Home (2021)
   "tt1630029",  // Avatar: The Way of Water (2022)
   "tt1745960",  // Top Gun: Maverick (2022)
@@ -46,10 +45,9 @@ export const popularMovieIds = [
   "tt0435705",  // Wall-E (2008)
   "tt0209144",  // Memento (2000)
   "tt0371746",  // Iron Man (2008)
+  "tt0120815",  // Saving Private Ryan (1998)
 
   // Page 5 (All-Time Favorites)
-  "tt0167260",  // Return of the King
-  "tt0120815",  // Saving Private Ryan (1998)
   "tt0079588",  // Alien (1979)
   "tt0082971",  // Raiders of the Lost Ark (1981)
   "tt0103064",  // Terminator 2: Judgment Day (1991)
@@ -58,4 +56,22 @@ export const popularMovieIds = [
   "tt0368226",  // The Prestige (2006)
   "tt0120689",  // The Green Mile (1999)
   "tt0898266",  // The Big Bang Theory (2007)
+  "tt0110413",  // Leon: The Professional (1994)
+  "tt0099685",  // Goodfellas (1990)
 ]
+
+export const fallbackKeywords = [
+  "marvel",
+  "batman",
+  "star wars",
+  "spiderman",
+  "avengers",
+  "harry potter",
+  "disney",
+  "pixar",
+]
+
+export function getPopularIdsBatch(page = 1, pageSize = 10) {
+  const start = (page - 1) * pageSize
+  return popularMovieIds.slice(start, start + pageSize)
+}
