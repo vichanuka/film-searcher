@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { getMovieDetails } from "../services/omdbApi"
 import MovieDetailsSkeleton from "../components/MovieDetailsSkeleton"
 import Navbar from "../components/Navbar"
+import TrailerModal from "../components/TrailerModal"
 import { useWatchlist } from "../context/WatchlistContext"
 
 export default function MovieDetails() {
@@ -10,6 +11,7 @@ export default function MovieDetails() {
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [showTrailer, setShowTrailer] = useState(false)
   const { isWatchlisted, toggleWatchlist } = useWatchlist()
   const isSaved = movie ? isWatchlisted(movie.imdbID) : false
 
@@ -196,31 +198,44 @@ export default function MovieDetails() {
                     )}
                   </div>
 
-                  {/* Add to Watchlist Button */}
-                  <button
-                    type="button"
-                    onClick={() => toggleWatchlist(movie)}
-                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
-                      isSaved
-                        ? "bg-rose-500 text-white shadow-md shadow-rose-500/20 hover:bg-rose-600"
-                        : "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"
-                    }`}
-                  >
-                    <svg
-                      className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`}
-                      fill={isSaved ? "currentColor" : "none"}
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  {/* Actions Group (Watch Trailer & Watchlist) */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowTrailer(true)}
+                      className="flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-rose-600/20 hover:bg-rose-700 active:scale-95 transition-all cursor-pointer"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
-                    {isSaved ? "In Watchlist" : "Add to Watchlist"}
-                  </button>
+                      <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                      Watch Trailer
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => toggleWatchlist(movie)}
+                      className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                        isSaved
+                          ? "bg-rose-500 text-white shadow-md shadow-rose-500/20 hover:bg-rose-600"
+                          : "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"
+                      }`}
+                    >
+                      <svg
+                        className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`}
+                        fill={isSaved ? "currentColor" : "none"}
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                      {isSaved ? "In Watchlist" : "Add to Watchlist"}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Title & Year */}
@@ -307,6 +322,13 @@ export default function MovieDetails() {
           </div>
         </div>
       </main>
+
+      {/* Official Trailer Modal */}
+      <TrailerModal
+        isOpen={showTrailer}
+        onClose={() => setShowTrailer(false)}
+        movie={movie}
+      />
     </div>
   )
 }
