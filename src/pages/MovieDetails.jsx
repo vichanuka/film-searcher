@@ -12,8 +12,35 @@ export default function MovieDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [showTrailer, setShowTrailer] = useState(false)
+  const [copied, setCopied] = useState(false)
   const { isWatchlisted, toggleWatchlist } = useWatchlist()
   const isSaved = movie ? isWatchlisted(movie.imdbID) : false
+
+  const handleShare = async () => {
+    if (!movie) return
+    const shareData = {
+      title: `${movie.Title} (${movie.Year})`,
+      text: `Check out ${movie.Title} (${movie.Year}) on Film Searcher!`,
+      url: window.location.href,
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+      } catch {
+        // Fallback to clipboard
+        copyToClipboard()
+      }
+    } else {
+      copyToClipboard()
+    }
+  }
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
+  }
 
   useEffect(() => {
     async function fetchDetails() {
@@ -198,7 +225,7 @@ export default function MovieDetails() {
                     )}
                   </div>
 
-                  {/* Actions Group (Watch Trailer & Watchlist) */}
+                  {/* Actions Group (Watch Trailer, Watchlist, Share) */}
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       type="button"
@@ -234,6 +261,42 @@ export default function MovieDetails() {
                         />
                       </svg>
                       {isSaved ? "In Watchlist" : "Add to Watchlist"}
+                    </button>
+
+                    {/* Share Button */}
+                    <button
+                      type="button"
+                      onClick={handleShare}
+                      title="Share movie link"
+                      className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                        copied
+                          ? "bg-emerald-700 text-white shadow-md shadow-emerald-700/20 scale-105"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-slate-800 dark:text-gray-200 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700"
+                      }`}
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        {copied ? (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        ) : (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                          />
+                        )}
+                      </svg>
+                      {copied ? "Link Copied!" : "Share"}
                     </button>
                   </div>
                 </div>
