@@ -11,6 +11,7 @@ export default function Home() {
   const [query, setQuery] = useState("")
   const [type, setType] = useState("")
   const [year, setYear] = useState("")
+  const [sortBy, setSortBy] = useState("")
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -23,6 +24,35 @@ export default function Home() {
   const [popularLoading, setPopularLoading] = useState(true)
   const [popularBatchPage, setPopularBatchPage] = useState(1)
   const [loadingMorePopular, setLoadingMorePopular] = useState(false)
+
+  function sortMoviesList(items, sortKey) {
+    if (!sortKey || !items || items.length === 0) return items
+
+    return [...items].sort((a, b) => {
+      if (sortKey === "year-desc") {
+        const yA = parseInt(a.Year?.match(/\d{4}/)?.[0] || "0", 10)
+        const yB = parseInt(b.Year?.match(/\d{4}/)?.[0] || "0", 10)
+        return yB - yA
+      }
+      if (sortKey === "year-asc") {
+        const yA = parseInt(a.Year?.match(/\d{4}/)?.[0] || "0", 10)
+        const yB = parseInt(b.Year?.match(/\d{4}/)?.[0] || "0", 10)
+        return yA - yB
+      }
+      if (sortKey === "title-asc") {
+        return a.Title.localeCompare(b.Title)
+      }
+      if (sortKey === "title-desc") {
+        return b.Title.localeCompare(a.Title)
+      }
+      if (sortKey === "rating-desc") {
+        const rA = parseFloat(a.imdbRating || "0")
+        const rB = parseFloat(b.imdbRating || "0")
+        return rB - rA
+      }
+      return 0
+    })
+  }
 
   async function loadPopularBatch(pageNumber = 1) {
     const idsToFetch = getPopularIdsBatch(pageNumber, 10)
@@ -163,6 +193,7 @@ export default function Home() {
   function handleResetFilters() {
     setType("")
     setYear("")
+    setSortBy("")
     if (query.trim()) {
       fetchMovies(query, 1, "", "")
     }
@@ -172,6 +203,7 @@ export default function Home() {
     setQuery("")
     setType("")
     setYear("")
+    setSortBy("")
     setSearched(false)
     setMovies([])
     setError("")
@@ -183,6 +215,8 @@ export default function Home() {
   }
 
   const totalPages = Math.ceil(totalResults / 10)
+  const displayMovies = sortMoviesList(movies, sortBy)
+  const displayPopularMovies = sortMoviesList(popularMovies, sortBy)
 
   return (
     <div className="min-h-screen bg-emerald-50/30 text-gray-900 transition-colors dark:bg-slate-950 dark:text-white">
@@ -212,6 +246,8 @@ export default function Home() {
               onTypeChange={setType}
               year={year}
               onYearChange={setYear}
+              sortBy={sortBy}
+              onSortByChange={setSortBy}
               onSearch={handleSearch}
               onReset={handleResetFilters}
             />
@@ -288,7 +324,7 @@ export default function Home() {
                   </div>
 
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    {movies.map((movie) => (
+                    {displayMovies.map((movie) => (
                       <MovieCard key={movie.imdbID} movie={movie} />
                     ))}
                   </div>
@@ -327,7 +363,7 @@ export default function Home() {
               ) : (
                 <>
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    {popularMovies.map((movie) => (
+                    {displayPopularMovies.map((movie) => (
                       <MovieCard key={movie.imdbID} movie={movie} />
                     ))}
                     {loadingMorePopular &&

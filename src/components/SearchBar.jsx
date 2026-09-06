@@ -5,10 +5,12 @@ export default function SearchBar({
   onTypeChange,
   year,
   onYearChange,
+  sortBy,
+  onSortByChange,
   onSearch,
   onReset,
 }) {
-  const isFiltered = type || year
+  const isFiltered = type || year || sortBy
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -47,7 +49,7 @@ export default function SearchBar({
         {/* Filters Group */}
         <div className="flex flex-wrap items-end gap-2 sm:flex-nowrap">
           {/* Type Selector */}
-          <div className="flex flex-col flex-1 sm:w-32">
+          <div className="flex flex-col flex-1 sm:w-28">
             <label className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 px-1">
               Type
             </label>
@@ -64,7 +66,7 @@ export default function SearchBar({
           </div>
 
           {/* Year Selector */}
-          <div className="flex flex-col flex-1 sm:w-36">
+          <div className="flex flex-col flex-1 sm:w-32">
             <label className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 px-1">
               YEAR
             </label>
@@ -79,6 +81,25 @@ export default function SearchBar({
               <option value="2000s">2000s</option>
               <option value="1990s">1990s</option>
               <option value="before-1990">Before 1990</option>
+            </select>
+          </div>
+
+          {/* Sort By Selector */}
+          <div className="flex flex-col flex-1 sm:w-36">
+            <label className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 px-1">
+              SORT BY
+            </label>
+            <select
+              value={sortBy}
+              onChange={(e) => onSortByChange(e.target.value)}
+              className="rounded-xl bg-emerald-50/50 px-3 py-2.5 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:focus:bg-slate-800 cursor-pointer"
+            >
+              <option value="">Relevance</option>
+              <option value="year-desc">Year: Newest First</option>
+              <option value="year-asc">Year: Oldest First</option>
+              <option value="title-asc">Title: A to Z</option>
+              <option value="title-desc">Title: Z to A</option>
+              <option value="rating-desc">IMDb Rating: High to Low</option>
             </select>
           </div>
 
