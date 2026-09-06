@@ -45,29 +45,42 @@ export default function SearchBar({
         </div>
 
         {/* Filters Group */}
-        <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+        <div className="flex flex-wrap items-end gap-2 sm:flex-nowrap">
           {/* Type Selector */}
-          <select
-            value={type}
-            onChange={(e) => onTypeChange(e.target.value)}
-            className="flex-1 rounded-xl bg-emerald-50/50 px-3 py-3 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:focus:bg-slate-800 sm:w-32"
-          >
-            <option value="">All Types</option>
-            <option value="movie">Movie</option>
-            <option value="series">Series</option>
-            <option value="episode">Episode</option>
-          </select>
+          <div className="flex flex-col flex-1 sm:w-32">
+            <label className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 px-1">
+              Type
+            </label>
+            <select
+              value={type}
+              onChange={(e) => onTypeChange(e.target.value)}
+              className="rounded-xl bg-emerald-50/50 px-3 py-2.5 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:focus:bg-slate-800"
+            >
+              <option value="">All Types</option>
+              <option value="movie">Movie</option>
+              <option value="series">Series</option>
+              <option value="episode">Episode</option>
+            </select>
+          </div>
 
-          {/* Year Input */}
-          <input
-            type="number"
-            value={year}
-            onChange={(e) => onYearChange(e.target.value)}
-            placeholder="Year"
-            min="1900"
-            max={new Date().getFullYear()}
-            className="w-24 rounded-xl bg-emerald-50/50 px-3 py-3 text-xs font-semibold text-emerald-900 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:placeholder-gray-500 dark:focus:bg-slate-800"
-          />
+          {/* Year Selector */}
+          <div className="flex flex-col flex-1 sm:w-36">
+            <label className="mb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 px-1">
+              YEAR
+            </label>
+            <select
+              value={year}
+              onChange={(e) => onYearChange(e.target.value)}
+              className="rounded-xl bg-emerald-50/50 px-3 py-2.5 text-xs font-semibold text-emerald-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:bg-slate-800 dark:text-emerald-300 dark:focus:bg-slate-800 cursor-pointer"
+            >
+              <option value="">Any year</option>
+              <option value="2020s">2020s</option>
+              <option value="2010s">2010s</option>
+              <option value="2000s">2000s</option>
+              <option value="1990s">1990s</option>
+              <option value="before-1990">Before 1990</option>
+            </select>
+          </div>
 
           {/* Reset Filters Button */}
           {isFiltered && onReset && (
@@ -75,7 +88,7 @@ export default function SearchBar({
               type="button"
               onClick={onReset}
               title="Reset filters"
-              className="rounded-xl bg-emerald-100/70 px-3 py-3 text-xs font-semibold text-emerald-700 hover:bg-emerald-200/80 transition-colors dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-slate-700"
+              className="rounded-xl bg-emerald-100/70 px-3 py-2.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-200/80 transition-colors dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-slate-700"
             >
               Reset
             </button>
@@ -84,7 +97,7 @@ export default function SearchBar({
           {/* Submit Button */}
           <button
             type="submit"
-            className="flex-1 sm:flex-none rounded-xl bg-emerald-600 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-emerald-600/20 transition-all hover:bg-emerald-700 active:scale-95 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+            className="flex-1 sm:flex-none rounded-xl bg-emerald-600 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-emerald-600/20 transition-all hover:bg-emerald-700 active:scale-95 dark:bg-emerald-600 dark:hover:bg-emerald-500"
           >
             Search
           </button>

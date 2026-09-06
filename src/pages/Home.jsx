@@ -57,11 +57,14 @@ export default function Home() {
       setError("")
       setSearched(true)
 
+      const isFourDigitYear = /^\d{4}$/.test(selectedYear)
+      const apiYear = isFourDigitYear ? selectedYear : ""
+
       const data = await searchMovies(
         trimmed,
         targetPage,
         selectedType,
-        selectedYear
+        apiYear
       )
 
       if (data.Response === "False") {
@@ -79,7 +82,22 @@ export default function Home() {
         return
       }
 
-      setMovies(data.Search || [])
+      let results = data.Search || []
+
+      if (selectedYear && !isFourDigitYear) {
+        results = results.filter((movie) => {
+          const yNum = parseInt(movie.Year?.match(/\d{4}/)?.[0] || "0", 10)
+          if (!yNum) return true
+          if (selectedYear === "2020s") return yNum >= 2020 && yNum <= 2029
+          if (selectedYear === "2010s") return yNum >= 2010 && yNum <= 2019
+          if (selectedYear === "2000s") return yNum >= 2000 && yNum <= 2009
+          if (selectedYear === "1990s") return yNum >= 1990 && yNum <= 1999
+          if (selectedYear === "before-1990") return yNum < 1990
+          return true
+        })
+      }
+
+      setMovies(results)
       setTotalResults(parseInt(data.totalResults || "0", 10))
       setPage(targetPage)
     } catch {
